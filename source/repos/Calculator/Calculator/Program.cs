@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Calculator
 {
@@ -6,56 +10,94 @@ namespace Calculator
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to the calculator!");
+            welcomeMessage();
 
-            Console.WriteLine("Enter the operator: ");
+            bool displayCalculator = true;
+            while (displayCalculator == true)
+            {
+                performCalculation();
+            }
+        }
+
+        private static void welcomeMessage()
+        {
+            Console.WriteLine("Welcome to the Calculator");
+            Console.WriteLine("--------------------------");
+        }
+
+        private static string userOperator()
+        {
+            Console.Write("Enter the operator: ");
             string operatorInput = Console.ReadLine();
 
-            string operatorWord = "";
+            return operatorInput;
+        }
 
-            Console.WriteLine("How many numbers would you like to " + operatorWord + "?");
-            int numberInput = int.Parse(Console.ReadLine());
+        private static void performCalculation()
+        {
+            var operatorInput = userOperator();
+            var numbers = userArray(operatorInput);
+            var result = calculateResult(operatorInput, numbers);
 
-            int[] numbers = new int[numberInput];
-            for (int index = 0; index < numberInput; index++)
+            Console.WriteLine("Your result is: " + result);
+            Console.WriteLine();
+        }
+
+        // Tried to use "{0}, operatorInput " instead of [text] + operator input + [question mark] but seems to only work when using WriteLine
+        private static int[] userArray(string operatorInput)
+        {
+            var count = userNumber("How many numbers do you want to " + operatorInput + "? ");
+
+            int[] numbers = new int[count];
+            for (int index = 0; index < count; index++)
             {
-                Console.Write("Please enter number " + (index + 1) + ": ");
-                numbers[index] = int.Parse(Console.ReadLine());
+                numbers[index] = userNumber("Enter number " + (index + 1) + ": ");
             }
+            return numbers;
+        }
 
-            int result = 0;
+        private static int userNumber(string message)
+        {
+            int count;
 
-            // Used sample solution to help with finishing this exercise
-            for (int index = 1; index < numberInput; index++)
+            do
+            {
+                Console.Write(message);
+            } while (!int.TryParse(Console.ReadLine(), out count));
+
+            return count;
+        }
+        /* Had to use method from solution to adapt my existing method that I tried to adapt. 
+         * Removed "operatorWord" variable as I struggled to get it in scope and it was unnecessary.
+         */
+        private static int calculateResult(string operatorInput, int[] numbers)
+        {
+            int result = numbers[0];
+            for (int index = 1; index < numbers.Length; index++)
             {
                 if (operatorInput == "+")
                 {
                     result = result + numbers[index];
-                    operatorWord = "add";
                 }
                 else if (operatorInput == "-")
                 {
                     result = result - numbers[index];
-                    operatorWord = "subtract";
                 }
                 else if (operatorInput == "*")
                 {
                     result = result * numbers[index];
-                    operatorWord = "multiply";
                 }
                 else if (operatorInput == "/")
                 {
-                    result = result - numbers[index];
-                    operatorWord = "divide";
+                    result = result / numbers[index];
                 }
-                else
+                /* Due to implementation, this was commented out.
+                 else
                 {
                     Console.WriteLine("Please input a valid operator.");
-                }
+                } */
             }
-
-            Console.WriteLine("Your result is: " + result);
-            Console.ReadLine();
+            return result;
         }
     }
 }
