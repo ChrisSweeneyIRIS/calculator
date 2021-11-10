@@ -8,21 +8,62 @@ namespace Calculator
 {
     class Program
     {
+        private const int NumberCalculator = 1;
+        private const int DateCalculator = 2;
+
         static void Main(string[] args)
         {
-            welcomeMessage();
-
-            bool displayCalculator = true;
-            while (displayCalculator == true)
+            bool displayMenu = true;
+            while (displayMenu == true)
             {
-                performCalculation();
+                displayMenu = mainMenu();
+            }
+        }
+
+        private static bool mainMenu()
+        {
+            welcomeMessage();
+        
+            Console.WriteLine("1) Numbers");
+            Console.WriteLine("2) Dates");
+            Console.WriteLine("3) Exit");
+            string menuInput = Console.ReadLine();
+
+            if (menuInput == "1")
+            {
+                numberCalculator();
+                return true;
+
+            }
+            else if (menuInput == "2")
+            {
+                dateCalculator();
+                return true;
+            }
+            else if (menuInput == "3")
+            {
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
 
         private static void welcomeMessage()
         {
-            Console.WriteLine("Welcome to the Calculator");
-            Console.WriteLine("--------------------------");
+            Console.WriteLine("Welcome to the calculator, please choose an option: ");
+            Console.WriteLine("----------------------------------------------------");
+        }
+
+        private static void numberCalculator()
+        {
+            performCalculation();
+        }
+
+        private static void dateCalculator()
+        {
+            performDateCalculation();
         }
 
         private static string userOperator()
@@ -43,7 +84,6 @@ namespace Calculator
             Console.WriteLine();
         }
 
-        // Tried to use "{0}, operatorInput " instead of [text] + operator input + [question mark] but seems to only work when using WriteLine
         private static int[] userArray(string operatorInput)
         {
             var count = userNumber("How many numbers do you want to " + operatorInput + "? ");
@@ -67,9 +107,7 @@ namespace Calculator
 
             return count;
         }
-        /* Had to use method from solution to adapt my existing method that I tried to adapt. 
-         * Removed "operatorWord" variable as I struggled to get it in scope and it was unnecessary.
-         */
+
         private static int calculateResult(string operatorInput, int[] numbers)
         {
             int result = numbers[0];
@@ -98,6 +136,28 @@ namespace Calculator
                 } */
             }
             return result;
+        }
+
+        private static void performDateCalculation()
+        {
+            var date = userDate("Enter a date: ");
+            var number = userNumber("Enter the number of days to be added: ");
+
+            var result = date.AddDays(number);
+
+            Console.WriteLine("The date result is: " + result);
+            Console.ReadLine();
+        }
+
+        private static DateTime userDate(string message)
+        {
+            DateTime date;
+
+            do
+            {
+                Console.WriteLine(message);
+            } while (!DateTime.TryParse(Console.ReadLine(), out date));
+            return date;
         }
     }
 }
